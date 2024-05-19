@@ -1,0 +1,1 @@
+Title description: Open an English text file, assuming that all words in the text file are separated by "spaces" and each segment of the text is separated by "carriage return". Count the number of segments in the output text, the total number of words, as well as the longest, shortest, and average number of words in each segment.

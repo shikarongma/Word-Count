@@ -1,71 +1,56 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
-// å‡½æ•°åŸå‹
-bool is_delimiter(char c);
-int count_words(FILE *file);
-int count_characters(FILE *file);
+#define MAX_LINE 1024
 
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        printf("Usage: WordCount [-c|-w] <file_name>\n");
-        return 1;
+int main(){
+    //duanluo ±íÊ¾¶ÎÂäÊı£¬words±íÊ¾Ä³Ò»¶ÎµÄµ¥´ÊÊı
+    int duanluo = 0, words = 0;
+    //min±íÊ¾×îĞ¡¶ÎÂäµÄµ¥´ÊÊı£¬max£º×î´ó¶ÎÂäµÄµ¥´ÊÊı£¬sum£ºµ¥´Ê×ÜÊı
+    int min = 65525, ave = 0, max = 0,sum = 0;
+    FILE* fp;  //ÎÄ¼şÖ¸Õë
+
+    char buffer[MAX_LINE] ; //»º³åÇø
+    int len ;//ĞĞ×Ö·û¸öÊı
+    int i;
+    fp = fopen("D:\\study.clion\\untitled15\\input.txt","r");
+    if(fp == NULL){
+        printf("cannot open file!");
+        exit(0);
     }
-
-    FILE *file = fopen(argv[2], "r");
-    if (file == NULL) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    int count = 0;
-    if (strcmp(argv[1], "-w") == 0) {
-        count = count_words(file);
-        printf("å•è¯æ•°ï¼š%d\n", count);
-    } else if (strcmp(argv[1], "-c") == 0) {
-        count = count_characters(file);
-        printf("å­—ç¬¦æ•°ï¼š%d\n", count);
-    } else {
-        printf("Invalid parameter. Use '-c' for characters or '-w' for words.\n");
-    }
-
-    fclose(file);
-    return 0;
-}
-
-// åˆ¤æ–­æ˜¯å¦æ˜¯åˆ†éš”ç¬¦
-bool is_delimiter(char c) {
-    return isspace(c) || c == ',';
-}
-
-// è®¡ç®—å•è¯æ•°
-int count_words(FILE *file) {
-    int count = 0;
-    bool in_word = false;
-    char c;
-    while ((c = fgetc(file)) != EOF) {
-        if (is_delimiter(c)) {
-            if (in_word) {
-                count++;
-                in_word = false;
+    int nums=0;
+    //¶ÁÈ¡ÎÄ¼şÄÚÈİ
+    while(! feof(fp)){
+        // fgets() ÔÚ¶Á³ö MAX_LINE ¸ö×Ö·ûÖ®Ç°£¬Óöµ½ »»ĞĞ·û »ò EOF Ôò¶Á³ö½áÊø
+        if(fgets(buffer, MAX_LINE, fp) != NULL){
+            duanluo ++;
+            len = strlen(buffer);
+            //Óöµ½µÚÒ»¸ö¿Õ¸ñÖ®Ç°ÒÑÓĞÒ»¸öµ¥´Ê
+            words = 1;
+            sum ++;
+         //len - 1 ÊÇÎªÁËÈ¥µô»»ĞĞ·ûËùÕ¼Î»ÖÃ
+            for(i = 0; i < len - 1; i++){
+                if(buffer[i] == ' '){
+                    words ++;
+                    sum ++;
+                } else
+                    nums++;
             }
-        } else {
-            in_word = true;
         }
-    }
-    if (in_word) {
-        count++; // æ–‡ä»¶æœ«å°¾çš„å•è¯
-    }
-    return count;
-}
 
-// è®¡ç®—å­—ç¬¦æ•°
-int count_characters(FILE *file) {
-    int count = 0;
-    char c;
-    while ((c = fgetc(file)) != EOF) {
-        count++;
+       if(min > words){
+            min = words;
+       }
+       if(max < words){
+            max = words;
+       }
     }
-    return count;
+
+    fclose(fp);
+    //Êä³ö
+    printf("\n\t ×Üµ¥´ÊÊıÎª %d \n \n",sum);
+    printf("\t ×Ü×Ö·ûÊıÎª %d \n \n",nums);
+
+    return 0;
 }
